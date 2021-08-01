@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use Telegram\Bot\Actions;
+use Telegram\Bot\Commands\Command;
+
+class {{ class }} extends Command
+{
+    protected $name = "";
+
+    protected $description = "";
+
+    public function handle()
+    {
+
+    }
+}
