@@ -3,32 +3,44 @@
 namespace App\Telegram\Commands;
 
 use App\Models\AuthModel;
-use Carbon\Carbon;
 use Telegram\Bot\Actions;
 use Telegram\Bot\Commands\Command;
-use Telegram\Bot\Laravel\Facades\Telegram;
 use Illuminate\Support\Facades\Http;
 
 
 class AuthCommand extends Command
 {
+    /**
+     * @var string Command Name
+     */
     protected $name = "auth";
     protected $client_id = "seller-web_d946981ba00f215004d36c42ffc9a602";
 
-    protected $description = "Set authenticate for Tokoku Itemku. Example: /auth <token> <client_id>";
+    /**
+     * @var string Command Description
+     */
+    protected $description = "Set authenticate for Tokoku Itemku.";
 
+    /**
+     * @inheritdoc
+     */
     public function handle()
     {
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         $fromTelegram = request()->message;
-        $data = $this->checkFormat($fromTelegram);
-        $this->checkValid($data[0], $data[1]);
-        $this->saveAuth($fromTelegram['chat']['id'], $data[0], $data[1]);
+        $format = $this->checkFormat($fromTelegram);
 
-        $this->replyWithMessage([
-            'text' => "OK, otentikasi disimpan!"
-        ]);
+        if (is_array($format)) {
+            $valid = $this->checkValid($format[0], $format[1]);
+
+            if (is_array($valid)) {
+                $this->saveAuth($fromTelegram['chat']['id'], $format[0], $format[1], $valid[0], $valid[1]);
+                $this->replyWithMessage([
+                    'text' => "OK, otentikasi disimpan!"
+                ]);
+            }
+        }
     }
 
     public function checkFormat($fromTelegram)
@@ -36,10 +48,9 @@ class AuthCommand extends Command
         $arguments = explode(' ', $fromTelegram['text']);
         $hash = base64_encode('testtoken');
         if (count($arguments) < 2) {
-            $this->replyWithMessage([
+            return $this->replyWithMessage([
                 'text' => "Format tidak valid. Format /token <token> <client_id> \n<token> : required \n<client_id> : optional \nContoh: /token $hash ffc9a602 \n"
             ]);
-            exit;
         }
         $client_id = $arguments[2] ?? $this->client_id;
 
@@ -53,20 +64,26 @@ class AuthCommand extends Command
             "Authorization" => "Bearer $token",
             "Client-ID"     => $client_id,
             "Content-Type"  => "application/json"
-        ])->get('https://tokoku.itemku.com:81/point');
+        ])->get('https://tokoku.itemku.com:81/shop');
 
         if ($response->failed()) {
             $this->replyWithMessage([
-                'text' => "Token tidak valid #Unauthorized"
+                'text' => "Token yang dimasukkan tidak valid (unauthorized)!"
             ]);
-            exit;
+
+            return false;
         }
+        $data = json_decode($response->body())->data->data;
+
+        return [$data->name, "https://itemku.com/toko/" . $data->slug . "/" . $data->user_id];
     }
 
-    public function saveAuth($user_id, $token, $client_id)
+    public function saveAuth($user_id, $token, $client_id, $toko_name, $link_toko)
     {
         $auth = new AuthModel;
         $auth->user_id = $user_id;
+        $auth->toko_name = $toko_name;
+        $auth->link_toko = $link_toko;
         $auth->token = $token;
         $auth->client_id = $client_id;
         $auth->save();

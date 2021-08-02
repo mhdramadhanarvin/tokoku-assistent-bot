@@ -8,8 +8,8 @@ class UsersModel extends Model
 {
     protected $table = 'users';
 
-    public function token()
+    public function toko()
     {
-        return $this->hasMany(TokenModel::class, 'user_id');
+        return $this->hasMany(AuthModel::class, 'user_id');
     }
 }
