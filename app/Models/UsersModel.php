@@ -8,8 +8,8 @@ class UsersModel extends Model
 {
     protected $table = 'users';
 
-    public function alarm()
+    public function token()
     {
-        return $this->hasMany(AlarmModel::class, 'user_id');
+        return $this->hasMany(TokenModel::class, 'user_id');
     }
 }

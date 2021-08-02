@@ -60,7 +60,7 @@ class StartCommand extends Command
 
         $this->replyWithMessage(['text' => "Oke, $name bot sudah siap.."]);
 
-        $response = 'Petunjuk penggunaan:' . PHP_EOL;
+        $response = 'Daftar Command:' . PHP_EOL;
         $commands = $this->getTelegram()->getCommands();
         foreach ($commands as $name => $command) {
             $response .= sprintf('/%s - %s' . PHP_EOL, $name, $command->getDescription());
