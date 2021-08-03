@@ -37,7 +37,7 @@ class AuthCommand extends Command
             if (is_array($valid)) {
                 $this->saveAuth($fromTelegram['chat']['id'], $format[0], $format[1], $valid[0], $valid[1]);
                 $this->replyWithMessage([
-                    'text' => "OK, otentikasi disimpan!"
+                    'text' => "OK, autentikasi disimpan!"
                 ]);
             }
         }
@@ -46,10 +46,9 @@ class AuthCommand extends Command
     public function checkFormat($fromTelegram)
     {
         $arguments = explode(' ', $fromTelegram['text']);
-        $hash = base64_encode('testtoken');
         if (count($arguments) < 2) {
             return $this->replyWithMessage([
-                'text' => "Format tidak valid. Format /token <token> <client_id> \n<token> : required \n<client_id> : optional \nContoh: /token $hash ffc9a602 \n"
+                'text' => "Format tidak valid. Format /token <token> <client_id> \n<token> : required \n<client_id> : optional \nContoh: /token ffiduy6673290d.dwadw ffc9a602 \n"
             ]);
         }
         $client_id = $arguments[2] ?? $this->client_id;

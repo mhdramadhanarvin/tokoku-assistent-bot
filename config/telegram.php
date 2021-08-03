@@ -43,6 +43,7 @@ return [
                 \App\Telegram\Commands\StartCommand::class,
                 \App\Telegram\Commands\StatusCommand::class,
                 \App\Telegram\Commands\NotificationCommand::class,
+                \App\Telegram\Commands\OrdersCommand::class,
             ],
         ],
 

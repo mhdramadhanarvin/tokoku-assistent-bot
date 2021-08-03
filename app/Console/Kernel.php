@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\CleanDataLogs;
 use App\Jobs\ReminderAlarmAbsensi;
+use App\Jobs\ReminderNewOrder;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->job(new ReminderAlarmAbsensi)->everyMinute();
         // $schedule->job(new CleanDataLogs)->dailyAt('18:00');
+        $schedule->job(new ReminderNewOrder)->everyMinute();
     }
 
     /**

@@ -18,21 +18,18 @@ class StatusCommand extends Command
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         $fromTelegram = request()->message;
-        $user = UsersModel::find($fromTelegram['chat']['id']);
-        $toko = $user->toko->first();
-        $toko_name = $toko->toko_name;
-        // $link_toko = $toko->link_toko;
+        $user = UsersModel::with('toko')->find($fromTelegram['chat']['id']);
+        $toko = $user->toko()->first();
+        $toko_name = $toko->toko_name ?? '-';
+        // $link_toko = $toko->link_toko ?? '-'; 
         $link_toko = "";
-        $auth_check = $this->authCheck($toko->token, $toko->client_id);
+
+        $auth_check = is_null($toko) ? '-' : $this->authCheck($toko->token, $toko->client_id);
         $notification = $user->enable_notification == 1 ? "Yes" : "No";
-        // $orders = $this->getOrders($toko->token, $toko->client_id);
-        // dd(json_decode($orders)->data->data);
 
         $this->replyWithMessage([
             'text' => "Info : \nStore Name : $toko_name\nStore Link : $link_toko\nStore Auth : $auth_check\nEnable Notification : $notification\n"
         ]);
-
-        // $this->triggerCommand('start');
     }
 
     public function authCheck($token, $client_id)
