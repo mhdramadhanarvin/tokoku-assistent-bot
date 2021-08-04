@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\UsersModel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Queue\SerializesModels;
 use App\Telegram\Commands\StatusCommand;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,6 +41,9 @@ class ReminderNewOrder implements ShouldQueue
             $checkAuth = (new StatusCommand)->authCheck($toko->token, $toko->client_id);
 
             if ($checkAuth == "Success") {
+                $token = $toko->token ?? '';
+                $client_id = $toko->client_id ?? '';
+                $this->dashboardTokoku($token, $client_id);
             } else {
                 for ($i = 0; $i < 2; $i++) {
                     Telegram::sendMessage([
@@ -51,7 +55,19 @@ class ReminderNewOrder implements ShouldQueue
         }
     }
 
-    public function dashboardTokoku()
+    public function sendReminderNewOrder()
     {
+    }
+
+    public function dashboardTokoku($token, $client_id)
+    {
+        $response = Http::withHeaders([
+            "Accept"        => "application/json",
+            "Authorization" => "Bearer $token",
+            "Client-ID"     => $client_id,
+            "Content-Type"  => "application/json"
+        ])->get('https://tokoku.itemku.com:81/dashboard');
+
+        dd($response->body());
     }
 }
