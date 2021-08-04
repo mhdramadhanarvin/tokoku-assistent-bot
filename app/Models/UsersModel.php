@@ -10,6 +10,6 @@ class UsersModel extends Model
 
     public function toko()
     {
-        return $this->hasMany(AuthModel::class, 'user_id');
+        return $this->hasOne(AuthModel::class, 'user_id', 'id');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Telegram\Commands;
 
 use App\Models\AuthModel;
 use Telegram\Bot\Actions;
+use App\Jobs\ReminderNewOrder;
 use Telegram\Bot\Commands\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -26,7 +27,6 @@ class AuthCommand extends Command
      */
     public function handle()
     {
-        // dd($this->autoAuthfromGoogle());
         $this->replyWithChatAction(['action' => Actions::TYPING]);
 
         $fromTelegram = request()->message;
@@ -141,12 +141,28 @@ class AuthCommand extends Command
 
     public function saveAuth($user_id, $token, $client_id, $toko_name, $link_toko)
     {
-        $auth = new AuthModel;
-        $auth->user_id = $user_id;
-        $auth->toko_name = $toko_name;
-        $auth->link_toko = $link_toko;
-        $auth->token = $token;
-        $auth->client_id = $client_id;
-        $auth->save();
+        // $auth = new AuthModel;
+        // $auth->user_id = $user_id;
+        // $auth->toko_name = $toko_name;
+        // $auth->link_toko = $link_toko;
+        // $auth->token = $token;
+        // $auth->client_id = $client_id;
+        // $auth->save();
+
+        $dashboard = (new ReminderNewOrder)->dashboardTokoku($token, $client_id)->data;
+
+        $auth = AuthModel::updateOrCreate(
+            ['user_id'  => $user_id],
+            [
+                'toko_name' => $toko_name,
+                'link_toko' => $link_toko,
+                'token'     => $token,
+                'client_id'     => $client_id,
+                'unprocessed_order' => $dashboard->waiting_for_seller,
+                'dashboard_data'    => json_encode($dashboard)
+            ]
+        );
+
+        return $auth;
     }
 }

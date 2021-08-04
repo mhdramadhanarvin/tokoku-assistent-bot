@@ -21,7 +21,7 @@ class OrdersCommand extends Command
 
         if (is_int($order_code_status)) {
             $user = UsersModel::with('toko')->find($fromTelegram['chat']['id']);
-            $toko = $user->toko()->first();
+            $toko = $user->toko;
             $token = $toko->token ?? '';
             $client_id = $toko->client_id ?? '';
 
@@ -58,7 +58,7 @@ class OrdersCommand extends Command
     public function getOrders($user_id, $order_code_status, $limit = 5)
     {
         $user = UsersModel::with('toko')->find($user_id);
-        $toko = $user->toko()->first();
+        $toko = $user->toko;
         $token = $toko->token ?? '';
         $client_id = $toko->client_id ?? '';
         $response = Http::withHeaders([
@@ -74,13 +74,13 @@ class OrdersCommand extends Command
         foreach ($data as $key => $row) {
             $status = ['', 'all', 'unprocessed', 'waiting', 'done', 'on-cancel', 'canceled'];
             $premium = $row->is_premium ? " \t\t<b><i>premium</i></b>"  : "";
-            $response .= $row->order_number . $premium . PHP_EOL;
-            $response .= "\t" . "Product Name : \t" . $row->product_name . PHP_EOL;
-            $response .= "\t" . "Product Category : \t" . $row->game_name . PHP_EOL;
-            $response .= "\t" . "Order Date : \t" . date("d F Y H:i:s", strtotime($row->paid_at)) . PHP_EOL;
-            $response .= "\t" . "Price Sale : \t Rp " . number_format($row->order_value, 0, ',', ' ') . PHP_EOL;
-            $response .= "\t" . "Seller Income : \t Rp " . number_format($row->seller_income, 0, ',', ' ') . PHP_EOL;
-            $response .= "\t" . "Status : \t" . ucwords($status[$row->status]) . PHP_EOL;
+            $response .= "<strong>" . $row->order_number . "</strong>" . $premium . PHP_EOL;
+            $response .= "\t\t\t\t\t\t" . "Product Name : \t" . $row->product_name . PHP_EOL;
+            $response .= "\t\t\t\t\t\t" . "Product Category : \t" . $row->game_name . PHP_EOL;
+            $response .= "\t\t\t\t\t\t" . "Order Date : \t" . date("d F Y H:i:s", strtotime($row->paid_at)) . PHP_EOL;
+            $response .= "\t\t\t\t\t\t" . "Price Sale : \t Rp " . number_format($row->order_value, 0, ',', ' ') . PHP_EOL;
+            $response .= "\t\t\t\t\t\t" . "Seller Income : \t Rp " . number_format($row->seller_income, 0, ',', ' ') . PHP_EOL;
+            $response .= "\t\t\t\t\t\t" . "Status : \t" . ucwords($status[$row->status]) . PHP_EOL;
             $response .= PHP_EOL;
 
             if ($key == 2) break;
