@@ -10,7 +10,7 @@ class NotificationCommand extends Command
 {
     protected $name = "notification";
 
-    protected $description = "Notification status Tokoku";
+    protected $description = "Set notification for Tokoku Itemku";
 
     public function handle()
     {

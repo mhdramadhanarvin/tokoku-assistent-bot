@@ -39,11 +39,11 @@ return [
             'webhook_url'         => env('TELEGRAM_WEBHOOK_URL', 'YOUR-BOT-WEBHOOK-URL'),
             'commands'            => [
                 // Telegram\Bot\Commands\HelpCommand::class,
-                \App\Telegram\Commands\AuthCommand::class,
                 \App\Telegram\Commands\StartCommand::class,
-                \App\Telegram\Commands\StatusCommand::class,
+                \App\Telegram\Commands\AuthCommand::class,
                 \App\Telegram\Commands\NotificationCommand::class,
                 \App\Telegram\Commands\OrdersCommand::class,
+                \App\Telegram\Commands\StatusCommand::class,
             ],
         ],
 
