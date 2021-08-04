@@ -27,8 +27,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        // $schedule->job(new ReminderAlarmAbsensi)->everyMinute();
         // $schedule->job(new CleanDataLogs)->dailyAt('18:00');
         $schedule->job(new ReminderNewOrder)->everyMinute();
     }
