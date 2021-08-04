@@ -13,11 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'TelegramController@index');
-Route::get('/local', function () {
-    return response()
-        ->view('local');
-    // ->header('X-Frame-Options', 'sameorigin');
-});
-
+Route::get('/', 'TelegramController@index')->withoutMiddleware([\App\Http\Middleware\AuthenticateTelegramAccount::class]);
 Route::post('42yUojv1YQPOssPEpn5i3q6vjdhh7hl7djVWDIAVhFDRMAwZ1tj0Og2v4PWyj4PZ/webhook', 'TelegramController@webhook');

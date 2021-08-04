@@ -21,8 +21,7 @@ class StatusCommand extends Command
         $user = UsersModel::with('toko')->find($fromTelegram['chat']['id']);
         $toko = $user->toko()->first();
         $toko_name = $toko->toko_name ?? '-';
-        // $link_toko = $toko->link_toko ?? '-'; 
-        $link_toko = "";
+        $link_toko = $toko->link_toko ?? '-';
 
         $auth_check = is_null($toko) ? '-' : $this->authCheck($toko->token, $toko->client_id);
         $notification = $user->enable_notification == 1 ? "Yes" : "No";

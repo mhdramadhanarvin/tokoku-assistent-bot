@@ -141,14 +141,6 @@ class AuthCommand extends Command
 
     public function saveAuth($user_id, $token, $client_id, $toko_name, $link_toko)
     {
-        // $auth = new AuthModel;
-        // $auth->user_id = $user_id;
-        // $auth->toko_name = $toko_name;
-        // $auth->link_toko = $link_toko;
-        // $auth->token = $token;
-        // $auth->client_id = $client_id;
-        // $auth->save();
-
         $dashboard = (new ReminderNewOrder)->dashboardTokoku($token, $client_id)->data;
 
         $auth = AuthModel::updateOrCreate(
