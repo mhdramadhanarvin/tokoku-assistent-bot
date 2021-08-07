@@ -100,6 +100,7 @@ class AuthCommand extends Command
         ])->get('https://accounts.google.com/o/oauth2/iframerpc?action=issueToken&response_type=token%20id_token&login_hint=AJDLj6K_ACoTXtJXaK8eVP4CyrLe3zM0ebWCmPjjKN3NKgfagF-ZSOnYRRQa62l-KvroCnWW_MhSNl4XHXeo-ScKJchJbF64xg&client_id=912636350905-m0m08kaami7dslumuosi8oga6bf0ti5f.apps.googleusercontent.com&origin=https%3A%2F%2Ftokoku.itemku.com&scope=openid%20profile%20email&ss_domain=https%3A%2F%2Ftokoku.itemku.com');
 
         if ($response->successful()) {
+            dd($response->body());
             $googleToken = json_decode($response->body())->id_token;
             $token = $this->loginGoogle($googleToken);
 
